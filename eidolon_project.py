@@ -241,7 +241,7 @@ def update_rss_feed(history):
         # --- FIX 3: Assemble HTML without the redundant H1 title ---
         full_html_content = f"""
         <div style="{container_style}">
-            <p style="{meta_style}">Theme: {pretty_theme}<br/>Format: {entry['format']}</p>
+            <p style="{meta_style}">Theme: {pretty_theme}<br/>Format: {entry['format'].replace('_', ' ').title()}</p>
             
             {story_html}
 
