@@ -1,0 +1,52 @@
+# .github/workflows/run_eidolon.yml
+
+name: Generate Daily Eidolon Story
+
+# --- Trigger ---
+# This workflow runs on a schedule (cron) and can also be run manually.
+on:
+  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
+  schedule:
+    # Runs at 04:00 UTC every day. You can adjust the time.
+    # "At 04:00" -> "0 4 * * *"
+    - cron: '0 4 * * *'
+
+# --- Job ---
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel.
+jobs:
+  generate-story:
+    runs-on: ubuntu-latest # Use a standard Linux virtual machine
+
+    steps:
+      # Step 1: Check out the repository code
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          # We need to fetch all history for proper git operations later
+          fetch-depth: 0
+
+      # Step 2: Set up Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10' # Specify Python version
+
+      # Step 3: Install dependencies
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      # Step 4: Run the Eidolon Project script
+      - name: Generate new story
+        run: python eidolon_project.py
+        env:
+          # This makes our secret available as an environment variable to the script
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      # Step 5: Commit the updated files (rss.xml and history.json) back to the repo
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "Eidolon Curator Bot"
+          git config --global user.email "actions@github.com"
+          git add rss.xml history.json
+          # Only commit and push if there are changes
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Curator: Add new story for $(date -u +'%Y-%m-%d')" && git push)
