@@ -16,6 +16,8 @@ on:
 jobs:
   generate-story:
     runs-on: ubuntu-latest # Use a standard Linux virtual machine
+  permissions:
+    contents: write
 
     steps:
       # Step 1: Check out the repository code
