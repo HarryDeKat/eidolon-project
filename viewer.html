@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Eidolon Project Archive</title>
+    <!-- We use a CDN for the Markdown library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/14.0.0/markdown-it.min.js"></script>
+    <style>
+        /* --- General Body & Typography --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fdfdfd;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px 40px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a1a1a;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        
+        a {
+            color: #0056b3;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- Story List --- */
+        #story-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        #story-list li {
+            padding: 15px 10px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        #story-list li:hover {
+            background-color: #f7f7f7;
+        }
+        
+        #story-list .story-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        #story-list .story-date {
+            font-size: 0.85em;
+            color: #888;
+            margin-top: 5px;
+            display: block;
+        }
+
+        /* --- Individual Story View --- */
+        #story-viewer {
+            display: none; /* Initially hidden */
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        
+        .story-header h2 {
+            font-size: 2em;
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+        
+        .story-meta {
+            font-size: 0.9em;
+            font-style: italic;
+            color: #888;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+        
+        .story-body p, .story-body ul, .story-body ol {
+            margin-bottom: 1em;
+        }
+
+        .story-body strong {
+            color: #111;
+        }
+
+        .story-body hr {
+            border: 0;
+            border-top: 1px solid #ddd;
+            margin: 40px 0;
+        }
+
+        .curators-note {
+            background-color: #f7f7f7;
+            border-left: 4px solid #ccc;
+            padding: 20px 25px;
+            margin-top: 30px;
+            font-size: 0.95em;
+        }
+
+        .curators-note p:first-child {
+            margin-top: 0;
+        }
+        
+        .curators-note p:last-child {
+            margin-bottom: 0;
+        }
+
+        .curators-note-title {
+            font-weight: bold;
+            color: #1a1a1a;
+            margin-top: 0;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        #loading {
+            text-align: center;
+            font-size: 1.2em;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>The Eidolon Project Archive</h1>
+
+        <div id="story-list-container">
+            <ul id="story-list">
+                <!-- Story list will be populated by JavaScript -->
+            </ul>
+        </div>
+        
+        <div id="story-viewer">
+            <!-- Selected story will be displayed here by JavaScript -->
+        </div>
+        
+        <p id="loading">Loading stories...</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const storyListEl = document.getElementById('story-list');
+            const storyListContainerEl = document.getElementById('story-list-container');
+            const storyViewerEl = document.getElementById('story-viewer');
+            const loadingEl = document.getElementById('loading');
+            
+            // Initialize Markdown-it
+            const md = window.markdownit({
+                html: true,
+                linkify: true,
+                typographer: true
+            }).use(window.markdownit().options.linkify);
+
+            let allStories = [];
+
+            // --- Main Function to Fetch and Display Stories ---
+            async function initializeArchive() {
+                try {
+                    const response = await fetch('history.json');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    allStories = await response.json();
+                    loadingEl.style.display = 'none';
+                    
+                    // Check URL for a specific story to show
+                    const params = new URLSearchParams(window.location.search);
+                    const storyId = params.get('id');
+
+                    if (storyId) {
+                        const story = allStories.find(s => s.date === storyId);
+                        if (story) {
+                            displayStory(story);
+                        } else {
+                            displayList(); // Story not found, show the list
+                        }
+                    } else {
+                        displayList();
+                    }
+
+                } catch (error) {
+                    loadingEl.innerHTML = 'Error: Could not load the story archive. Make sure `history.json` is available.';
+                    console.error('Failed to load history.json:', error);
+                }
+            }
+            
+            // --- Function to Display the List of All Stories ---
+            function displayList() {
+                storyListEl.innerHTML = ''; // Clear existing list
+                allStories.forEach(story => {
+                    const li = document.createElement('li');
+                    
+                    const date = new Date(story.date);
+                    const formattedDate = date.toLocaleDateString(undefined, {
+                        year: 'numeric', month: 'long', day: 'numeric' 
+                    });
+                    
+                    li.innerHTML = `
+                        <span class="story-title">${story.title}</span>
+                        <span class="story-date">${formattedDate}</span>
+                    `;
+                    
+                    li.addEventListener('click', () => {
+                        displayStory(story);
+                        // Update URL without reloading the page
+                        const newUrl = `${window.location.pathname}?id=${story.date}`;
+                        history.pushState({storyId: story.date}, '', newUrl);
+                    });
+                    
+                    storyListEl.appendChild(li);
+                });
+                storyViewerEl.style.display = 'none';
+                storyListContainerEl.style.display = 'block';
+            }
+
+            // --- Function to Display a Single Story ---
+            function displayStory(story) {
+                const prettyTheme = story.theme.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                const prettyFormat = story.format; // Assuming format is already readable
+
+                const storyHtml = md.render(story.story);
+                const noteHtml = md.render(story.curators_note);
+
+                storyViewerEl.innerHTML = `
+                    <a href="${window.location.pathname}" class="back-link" id="back-to-list">← Back to Archive</a>
+                    <div class="story-header">
+                        <h2>${story.title}</h2>
+                        <p class="story-meta">
+                            <strong>Theme:</strong> ${prettyTheme}<br>
+                            <strong>Format:</strong> ${prettyFormat}
+                        </p>
+                    </div>
+                    <div class="story-body">${storyHtml}</div>
+                    <div class="curators-note">
+                        <strong class="curators-note-title">Curator's Note</strong>
+                        ${noteHtml}
+                    </div>
+                `;
+
+                storyListContainerEl.style.display = 'none';
+                storyViewerEl.style.display = 'block';
+
+                // Add event listener for the new "back" link
+                document.getElementById('back-to-list').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    displayList();
+                    history.pushState({storyId: null}, '', window.location.pathname);
+                });
+            }
+
+            // Handle browser back/forward buttons
+            window.addEventListener('popstate', (event) => {
+                if (event.state && event.state.storyId) {
+                    const story = allStories.find(s => s.date === event.state.storyId);
+                    if (story) displayStory(story);
+                } else {
+                    displayList();
+                }
+            });
+
+            // Start the application
+            initializeArchive();
+        });
+    </script>
+
+</body>
+</html>
