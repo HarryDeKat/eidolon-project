@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Eidolon Project Archive</title>
-    <!-- We use a CDN for the Markdown library -->
     <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
     <style>
         /* --- General Body & Typography --- */
@@ -170,26 +169,27 @@
             const storyViewerEl = document.getElementById('story-viewer');
             const loadingEl = document.getElementById('loading');
             
-            // Initialize Markdown-it
+            // --- THIS IS THE FIX ---
+            // Initialize Markdown-it correctly by passing options in the constructor
             const md = window.markdownit({
-                html: true,
-                linkify: true,
-                typographer: true
-            }).use(window.markdownit().options.linkify);
+                html: true,       // Allow HTML tags in source
+                linkify: true,    // Autoconvert URL-like text to links
+                typographer: true // Enable smartquotes and other typographic replacements
+            });
 
             let allStories = [];
 
             // --- Main Function to Fetch and Display Stories ---
             async function initializeArchive() {
                 try {
-                    const response = await fetch('history.json');
+                    // Add a cache-busting query parameter to ensure we get the latest history
+                    const response = await fetch(`history.json?v=${new Date().getTime()}`);
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     allStories = await response.json();
                     loadingEl.style.display = 'none';
                     
-                    // Check URL for a specific story to show
                     const params = new URLSearchParams(window.location.search);
                     const storyId = params.get('id');
 
@@ -198,7 +198,7 @@
                         if (story) {
                             displayStory(story);
                         } else {
-                            displayList(); // Story not found, show the list
+                            displayList();
                         }
                     } else {
                         displayList();
@@ -212,10 +212,9 @@
             
             // --- Function to Display the List of All Stories ---
             function displayList() {
-                storyListEl.innerHTML = ''; // Clear existing list
+                storyListEl.innerHTML = '';
                 allStories.forEach(story => {
                     const li = document.createElement('li');
-                    
                     const date = new Date(story.date);
                     const formattedDate = date.toLocaleDateString(undefined, {
                         year: 'numeric', month: 'long', day: 'numeric' 
@@ -228,7 +227,6 @@
                     
                     li.addEventListener('click', () => {
                         displayStory(story);
-                        // Update URL without reloading the page
                         const newUrl = `${window.location.pathname}?id=${story.date}`;
                         history.pushState({storyId: story.date}, '', newUrl);
                     });
@@ -242,7 +240,7 @@
             // --- Function to Display a Single Story ---
             function displayStory(story) {
                 const prettyTheme = story.theme.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                const prettyFormat = story.format; // Assuming format is already readable
+                const prettyFormat = story.format;
 
                 const storyHtml = md.render(story.story);
                 const noteHtml = md.render(story.curators_note);
@@ -266,7 +264,6 @@
                 storyListContainerEl.style.display = 'none';
                 storyViewerEl.style.display = 'block';
 
-                // Add event listener for the new "back" link
                 document.getElementById('back-to-list').addEventListener('click', (e) => {
                     e.preventDefault();
                     displayList();
@@ -274,7 +271,6 @@
                 });
             }
 
-            // Handle browser back/forward buttons
             window.addEventListener('popstate', (event) => {
                 if (event.state && event.state.storyId) {
                     const story = allStories.find(s => s.date === event.state.storyId);
@@ -284,7 +280,6 @@
                 }
             });
 
-            // Start the application
             initializeArchive();
         });
     </script>

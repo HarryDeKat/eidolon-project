@@ -246,7 +246,8 @@ def update_rss_feed(history):
         pretty_theme = entry['theme'].replace('_', ' ').title()
         pretty_format = entry['format'].replace('_', ' ').title()
 
-        plain_text_story = re.sub(r'\s+', ' ', cleaned_story).strip()
+        plain_text_story = strip_markdown(cleaned_story)
+        plain_text_story = re.sub(r'\s+', ' ', plain_text_story).strip()
         excerpt = (plain_text_story[:250] + '...') if len(plain_text_story) > 250 else plain_text_story
         ET.SubElement(item, "description").text = f"{excerpt}\n\n[Theme: {pretty_theme}]"
 
@@ -299,6 +300,20 @@ def clean_invalid_xml_chars(text):
         u'[^\u0009\u000a\u000d\u0020-\uD7FF\uE000-\uFFFD\U00010000-\U0010FFFF]'
     )
     return invalid_xml_chars_re.sub('', text)
+
+# eidolon_project.py (add this new function)
+
+def strip_markdown(text):
+    """A simple function to strip common markdown formatting for plain text summaries."""
+    # Remove bold, italic, code ticks
+    text = re.sub(r'([*_`])', '', text)
+    # Remove horizontal rules
+    text = re.sub(r'---', '', text)
+    # Remove headers
+    text = re.sub(r'#+\s', '', text)
+    # Remove links, keeping the link text
+    text = re.sub(r'\[(.*?)\]\(.*?\)', r'\1', text)
+    return text
 
 # --- 5. MAIN EXECUTION ---
 
