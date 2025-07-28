@@ -1,4 +1,5 @@
 # .github/workflows/run_eidolon.yml
+# .github/workflows/run_eidolon.yml
 
 name: Generate Daily Eidolon Story
 
@@ -44,11 +45,12 @@ jobs:
           # This makes our secret available as an environment variable to the script
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
-      # Step 5: Commit the updated files (rss.xml and history.json) back to the repo
+      # Step 5: Commit the updated files back to the repo
       - name: Commit and push changes
         run: |
           git config --global user.name "Eidolon Curator Bot"
           git config --global user.email "actions@github.com"
-          git add content/stories/* generation/history.json
+          # Add all generated files: new stories, art, RSS feed, and state files.
+          git add content/stories/* static/rss.xml static/art/* generation/history.json generation/theme_state.json
           # Only commit and push if there are changes
           git diff --quiet && git diff --staged --quiet || (git commit -m "Curator: Add new story for $(date -u +'%Y-%m-%d')" && git push)
