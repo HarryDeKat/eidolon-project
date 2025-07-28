@@ -33,18 +33,22 @@ jobs:
         with:
           python-version: '3.10' # Specify Python version
 
-      # Step 3: Install dependencies
+      # Step 3 Install dependencies
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      # Step 4: Run the Eidolon Project script
+      # Step 4: Navigate to the project directory
+      - name: Change directory to project
+        run: cd generation
+
+      # Step 5: Run the Eidolon Project script
       - name: Generate new story
-        run: python eidolon_project.py
+        run: python main.py
         env:
           # This makes our secret available as an environment variable to the script
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
-      # Step 5: Commit the updated files (rss.xml and history.json) back to the repo
+      # Step 6: Commit the updated files (rss.xml and history.json) back to the repo
       - name: Commit and push changes
         run: |
           git config --global user.name "Eidolon Curator Bot"
