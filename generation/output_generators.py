@@ -1,3 +1,4 @@
+# generation/output_generators.py
 # This module handles the creation of all final output files (RSS, Markdown).
 
 import os
@@ -38,6 +39,9 @@ def save_story_as_markdown(story_entry, art_path):
     art_filename = os.path.basename(art_path) if art_path else ""
     cover_art_md = f"![Cover Art](../art/{art_filename})" if art_filename else ""
 
+    # Correctly indent the multi-line curator's note for blockquote formatting
+    indented_note = story_entry['curators_note'].replace('\n', '\n> ')
+
     content = f"""---
 title: "{story_entry['title']}"
 date: "{date_iso_string}"
@@ -53,7 +57,7 @@ format: "{story_entry['format']}"
 
 > ## Curator's Note
 >
-> {story_entry['curators_note']}
+> {indented_note}
 """
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write(content)
