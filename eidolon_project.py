@@ -1,5 +1,3 @@
-# eidolon_project.py
-
 import os
 import json
 import datetime
@@ -71,7 +69,9 @@ def generate_creative_brief(history):
 
     INSPIRATION (DO NOT be limited by this list; invent your own):
     - Psychological Themes: Anosognosia, Solipsism, The Dunning-Kruger Effect, The Tetris Effect, Fata Morgana, Imposter Syndrome, The Hedonic Treadmill, Cognitive Dissonance, Chronophobia (fear of time).
-    - Creative Formats: A declassified government document, a series of unsent letters, an AI's therapy session log, the diary of an object, a transcript of a final phone call, a product review for a metaphysical product, an anthropologist's field notes on a modern ritual.
+    - Creative Formats: A personal diary entry from a peculiar character, a series of unsent letters, a transcript of a final phone call, an excerpt from a starship captain's log, a detective's case file notes, a last will and testament with unusual clauses, an anthropologist's field notes on a bizarre modern ritual, a confession made under strange circumstances.
+
+    FORMATTING GUIDELINES: The format should be a vessel for a compelling narrative. It must be inherently readable and engaging. Avoid formats that are primarily lists, technical documents, or bureaucratic paperwork. For example, DO NOT use formats like shopping lists, recipes, technical bug reports, legal agreements (EULAs), itemized bills, or raw computer logs. The story should flow naturally, not be confined by a rigid, non-literary structure.
 
     CRITICAL INSTRUCTION: To ensure variety, you MUST NOT create a brief that is thematically or structurally similar to the most recent entries listed below. Be original.
 
