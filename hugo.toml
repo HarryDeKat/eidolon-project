@@ -1,6 +1,6 @@
-baseURL = 'https://example.org/'
+baseURL = 'https://https://eidolon-project.vercel.app/'
 languageCode = 'en-us'
-title = 'Eidoloin Project'
+title = 'The Eidoloin Project'
 theme = 'nostyleplease'
 
 [services]
