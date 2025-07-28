@@ -1,4 +1,4 @@
-baseURL = 'https://https://eidolon-project.vercel.app/'
+baseURL = 'https://eidolon-project.vercel.app/'
 languageCode = 'en-us'
 title = 'The Eidoloin Project'
 theme = 'nostyleplease'
