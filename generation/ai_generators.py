@@ -59,7 +59,7 @@ def generate_story_arc_theme():
     
     try:
         response = client.models.generate_content(
-            contents=prompt, model=FAST_TEXT_MODEL, generation_config=generation_config
+            contents=prompt, model=FAST_TEXT_MODEL, config=generation_config
         )
         theme_data = json.loads(response.text)
         return theme_data
@@ -119,7 +119,7 @@ def generate_creative_brief(history, active_theme=None):
     
     try:
         response = client.models.generate_content(
-            contents=prompt, model=FAST_TEXT_MODEL, generation_config=generation_config
+            contents=prompt, model=FAST_TEXT_MODEL, config=generation_config
         )
         brief = json.loads(response.text)
         print(f"-> Brief created: Theme='{brief['theme']}', Format='{brief['format']}'")
@@ -173,7 +173,7 @@ def generate_story_from_brief(brief):
     
     try:
         response = client.models.generate_content(
-            contents=prompt, model=MAIN_TEXT_MODEL, generation_config=generation_config
+            contents=prompt, model=MAIN_TEXT_MODEL, config=generation_config
         )
         # Parse the JSON response directly, which is more robust than splitting strings
         story_data = json.loads(response.text)
@@ -218,7 +218,7 @@ def generate_image_prompt(story_entry):
 
     try:
         response = client.models.generate_content(
-            contents=summarization_prompt, model=FAST_TEXT_MODEL, generation_config=generation_config
+            contents=summarization_prompt, model=FAST_TEXT_MODEL, config=generation_config
         )
         summary_data = json.loads(response.text)
         visual_summary = summary_data['visual_summary'].strip()

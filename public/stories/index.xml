@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Stories on Eidoloin Project</title>
+    <title>Stories on The Eidoloin Project</title>
     <link>http://localhost:1313/stories/</link>
-    <description>Recent content in Stories on Eidoloin Project</description>
+    <description>Recent content in Stories on The Eidoloin Project</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 28 Jul 2025 14:56:46 +0000</lastBuildDate>
