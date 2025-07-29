@@ -1,5 +1,14 @@
 [
     {
+        "date": "2025-07-29T08:52:10.091218+00:00",
+        "title": "Parsing Error",
+        "theme": "The Cartography of Impossible Places",
+        "format": "The complete, cross-referenced inventory logs and accompanying 'Probable Traversal Maps' from the 'Trans-Dimensional Artifacts Repatriation Bureau' (T-DARB).",
+        "story": "The AI's response was not structured correctly as valid JSON.",
+        "curators_note": "The JSON output was malformed, so no curator's note is available.",
+        "cover_art_path": null
+    },
+    {
         "date": "2025-07-28T14:56:46.050744+00:00",
         "title": "The Umbral Cantos: Declassified Survey K-42",
         "theme": "The Cartography of Impossible Places",
