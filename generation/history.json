@@ -1,5 +1,14 @@
 [
     {
+        "date": "2025-12-12T04:27:18.156766+00:00",
+        "title": "Parsing Error",
+        "theme": "The Phantom Protocols: Manifestations of the Unseen",
+        "format": "Negative-Space Topography: A Catalog of Immaterial Voids",
+        "story": "The AI's response was not structured correctly as valid JSON.",
+        "curators_note": "The JSON output was malformed, so no curator's note is available.",
+        "cover_art_path": null
+    },
+    {
         "date": "2025-12-11T04:28:30.819587+00:00",
         "title": "Parsing Error",
         "theme": "The Phantom Protocols: Manifestations of the Unseen",
