@@ -1,5 +1,14 @@
 [
     {
+        "date": "2025-12-13T04:18:21.862623+00:00",
+        "title": "Parsing Error",
+        "theme": "The Phantom Protocols: Manifestations of the Unseen",
+        "format": "Ephemeral Data Stream Intercepts: A Catalogue of 'Ghost Signals' from Non-Existent Nodes",
+        "story": "The AI's response was not structured correctly as valid JSON.",
+        "curators_note": "The JSON output was malformed, so no curator's note is available.",
+        "cover_art_path": null
+    },
+    {
         "date": "2025-12-12T04:27:18.156766+00:00",
         "title": "Parsing Error",
         "theme": "The Phantom Protocols: Manifestations of the Unseen",
